@@ -1,0 +1,43 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  /** path under /public, e.g. "/logos/nyu.svg" */
+  src: string;
+  title?: string;
+  class?: string;
+  /** inherited colour becomes white (for dark brand tiles) */
+  onDark?: boolean;
+  /** inherited colour becomes near-black (for light brand tiles) */
+  onLight?: boolean;
+  /** raster already has correct brand colours — apply no filter */
+  raw?: boolean;
+}
+const { src, title, class: className = '', onDark = false, onLight = false, raw = false } = Astro.props;
+const tone = [
+  onDark ? 'logo-on-dark' : onLight ? 'logo-on-light' : '',
+  raw ? 'logo-raw' : '',
+].filter(Boolean).join(' ');
+
+const isSvg = src.endsWith('.svg');
+
+// SVGs are inlined at build time so `fill="currentColor"` inherits the theme
+// colour — an <img> tag cannot do that. Raster logos fall back to <img>.
+let svg = '';
+if (isSvg) {
+  try {
+    svg = fs.readFileSync(path.join(process.cwd(), 'public', src), 'utf-8');
+  } catch {
+    svg = '';
+  }
+}
+---
+
+{isSvg ? (
+  <span class={`logo ${tone} ${className}`} title={title} set:html={svg} />
+) : (
+  <span class={`logo logo-raster ${tone} ${className}`} title={title}>
+    <img src={src} alt={title ?? ''} loading="lazy" />
+  </span>
+)}

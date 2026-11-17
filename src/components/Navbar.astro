@@ -1,0 +1,58 @@
+---
+const links = [
+  { href: '#about', label: 'About' },
+  { href: '#speaking', label: 'Speaking' },
+  { href: '#research', label: 'Research' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#writing', label: 'Writing' },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-line bg-bg/80 backdrop-blur-xl">
+  <nav class="container-wide flex items-center justify-between h-16">
+    <a href="#top" class="font-semibold tracking-tightest">Harshul Jain</a>
+
+    <div class="hidden md:flex items-center gap-7 text-sm text-muted">
+      {links.map(l => (
+        <a href={l.href} class="hover:text-fg transition-colors duration-200">{l.label}</a>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-2">
+      <a href="#connect" class="hidden sm:inline-flex btn-primary !px-4 !py-2">Get in touch</a>
+      <button data-theme-toggle class="p-2 rounded-lg text-muted hover:text-fg transition-colors" aria-label="Toggle theme">
+        <svg class="dark:hidden" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="hidden dark:inline" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button data-menu-toggle class="md:hidden p-2 text-muted" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div data-mobile-menu class="hidden md:hidden border-t border-line bg-bg">
+    <div class="container-wide flex flex-col py-4 gap-3.5 text-sm text-muted">
+      {links.map(l => (
+        <a href={l.href} data-mobile-link class="hover:text-fg transition-colors">{l.label}</a>
+      ))}
+      <a href="#connect" data-mobile-link class="btn-primary justify-center mt-1">Get in touch</a>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    const toggle = document.querySelector('[data-menu-toggle]');
+    const menu = document.querySelector('[data-mobile-menu]');
+    if (!toggle || !menu) return;
+    const close = () => {
+      menu.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', () => {
+      const hidden = menu.classList.toggle('hidden');
+      toggle.setAttribute('aria-expanded', String(!hidden));
+    });
+    document.querySelectorAll('[data-mobile-link]').forEach((a) => a.addEventListener('click', close));
+  })();
+</script>

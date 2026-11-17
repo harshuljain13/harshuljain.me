@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 92" width="300" height="92" fill="none">
+  <!-- framed lockup: top border breaks for the "AI Engineer" wordmark -->
+  <path
+    d="M8 26 H104 M196 26 H292 M292 26 V84 M292 84 H8 M8 84 V26"
+    stroke="currentColor" stroke-width="3.4" stroke-linecap="square"/>
+  <text x="150" y="32"
+        font-family="Inter, 'Helvetica Neue', Arial, sans-serif"
+        font-weight="700" font-size="18" letter-spacing="-0.4"
+        text-anchor="middle" fill="currentColor">AI Engineer</text>
+  <text x="150" y="70"
+        font-family="Inter, 'Helvetica Neue', Arial, sans-serif"
+        font-weight="800" font-size="35" letter-spacing="-1.4"
+        text-anchor="middle" fill="currentColor">Code Summit</text>
+</svg>

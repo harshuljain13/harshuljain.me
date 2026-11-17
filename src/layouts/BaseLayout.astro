@@ -1,0 +1,108 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/content';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = `${profile.name} — ${profile.role}`, description = profile.tagline } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      // Dark is the default; only an explicit 'light' choice opts out.
+      const saved = localStorage.getItem('theme');
+      if (saved !== 'light') document.documentElement.classList.add('dark');
+    </script>
+  </head>
+  <body>
+    <slot />
+
+    <script is:inline>
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-theme-toggle]');
+        if (!btn) return;
+        const html = document.documentElement;
+        html.classList.toggle('dark');
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      });
+
+      // Scroll reveal with per-group stagger
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const siblings = Array.from(el.parentElement?.children || []).filter((n) =>
+              n.classList.contains('fade-up')
+            );
+            const i = Math.max(0, siblings.indexOf(el));
+            el.style.transitionDelay = `${Math.min(i, 8) * 60}ms`;
+            el.classList.add('in-view');
+            io.unobserve(el);
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+      document.querySelectorAll('.fade-up').forEach((el) => io.observe(el));
+
+      // Standalone accent rules
+      const ruleIo = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('in-view');
+            ruleIo.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.5 }
+      );
+      document.querySelectorAll('.rule').forEach((el) => ruleIo.observe(el));
+
+      // Count-up for stat values ("300+", "5+", "20")
+      const countIo = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            countIo.unobserve(el);
+            const raw = el.getAttribute('data-count') || '';
+            const target = parseInt(raw.replace(/\D/g, ''), 10);
+            if (!target) return;
+            const suffix = raw.replace(/[0-9]/g, '');
+            const dur = 1000;
+            const start = performance.now();
+            const tick = (now) => {
+              const p = Math.min(1, (now - start) / dur);
+              el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          });
+        },
+        { threshold: 0.4 }
+      );
+      document.querySelectorAll('[data-count]').forEach((el) => countIo.observe(el));
+    </script>
+  </body>
+</html>

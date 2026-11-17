@@ -1,0 +1,127 @@
+---
+import type { Talk } from '../data/content';
+import Logo from './Logo.astro';
+
+interface Props { talks: Talk[]; }
+const { talks } = Astro.props;
+
+const kindLabel: Record<string, string> = {
+  talk: 'Talk',
+  workshop: 'Workshop',
+  'guest-lecture': 'Guest lecture',
+  invited: 'Invited',
+};
+
+// Bento rhythm: the flagship talk takes two lanes, everything else one.
+// Recorded talks are surfaced first so the video stills lead the grid.
+const ordered = [...talks].sort((a, b) => Number(!!b.youtubeId) - Number(!!a.youtubeId));
+const [featured, ...rest] = ordered;
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
+  {/* ---- featured: two lanes wide ---- */}
+  <a
+    href={`/talks/${featured.slug}`}
+    class="card talk-card group !p-0 overflow-hidden flex flex-col sm:col-span-2 fade-up"
+  >
+    <div class="talk-tile !h-auto aspect-[16/8] !p-0">
+      {featured.youtubeId ? (
+        <>
+          <img
+            src={`https://i.ytimg.com/vi/${featured.youtubeId}/maxresdefault.jpg`}
+            alt={featured.title}
+            loading="lazy"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
+        </>
+      ) : (
+        <div class="absolute inset-0" style={`background:${featured.brandBg}`}></div>
+      )}
+
+      <span class="absolute top-4 left-4 z-[3] chip !bg-white/15 !text-white !border-white/25 backdrop-blur">
+        Featured
+      </span>
+
+      {/* the video still already carries the venue branding — no extra overlay */}
+      {featured.youtubeId ? (
+        <span class="play-badge play-badge-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+      ) : (
+        <span class="absolute inset-0 z-[2] flex items-center justify-center px-8">
+          <Logo src={featured.logo} class="logo-xl" onDark={featured.brandFg === 'light'} onLight={featured.brandFg === 'dark'} />
+        </span>
+      )}
+    </div>
+
+    <div class="p-6">
+      <div class="flex items-center gap-2.5 mb-3">
+        <span class="chip chip-accent">{kindLabel[featured.kind]}</span>
+        <span class="text-[11px] font-mono text-muted">{featured.date}</span>
+        {featured.youtubeId && (
+          <span class="ml-auto text-[11px] font-mono text-accent">▶ Watch</span>
+        )}
+      </div>
+
+      <h3 class="text-[21px] md:text-[25px] font-semibold leading-snug tracking-tightest mb-3 group-hover:text-accent transition-colors">
+        {featured.title}
+      </h3>
+
+      <p class="text-[13px] text-muted">
+        {featured.venue}{featured.location ? ` · ${featured.location}` : ''}
+        {featured.withSpeakers?.length ? ` · with ${featured.withSpeakers.join(', ')}` : ''}
+      </p>
+    </div>
+  </a>
+
+  {/* ---- remaining lanes ---- */}
+  {rest.map(t => (
+    <a href={`/talks/${t.slug}`} class="card talk-card group !p-0 overflow-hidden flex flex-col fade-up">
+      <div class="talk-tile !h-auto aspect-[16/9] !p-0">
+        {t.youtubeId ? (
+          <>
+            <img
+              src={`https://i.ytimg.com/vi/${t.youtubeId}/hqdefault.jpg`}
+              alt={t.title}
+              loading="lazy"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
+            <span class="play-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+            <span class="absolute left-4 bottom-3.5 z-[2]">
+              <Logo src={t.logo} class="logo-sm" onDark />
+            </span>
+          </>
+        ) : (
+          <div class="absolute inset-0 flex items-center justify-center px-6" style={`background:${t.brandBg}`}>
+            <Logo src={t.logo} class="logo-lg" onDark={t.brandFg === 'light'} onLight={t.brandFg === 'dark'} />
+          </div>
+        )}
+      </div>
+
+      <div class="p-5 flex flex-col flex-1">
+        <div class="flex items-center gap-2 mb-3">
+          <span class={t.kind === 'guest-lecture' ? 'chip chip-amber' : 'chip chip-accent'}>
+            {kindLabel[t.kind]}
+          </span>
+          <span class="text-[11px] font-mono text-muted">{t.date}</span>
+          {t.youtubeId && <span class="ml-auto text-[11px] font-mono text-accent">▶</span>}
+        </div>
+
+        <h3 class="text-[15px] font-semibold leading-snug mb-2 group-hover:text-accent transition-colors">
+          {t.title}
+        </h3>
+
+        <p class="text-[13px] text-muted mt-auto">
+          {t.venue}{t.location ? ` · ${t.location}` : ''}
+        </p>
+        {t.withSpeakers?.length ? (
+          <p class="text-[12px] text-muted/80 mt-1">with {t.withSpeakers.join(', ')}</p>
+        ) : null}
+      </div>
+    </a>
+  ))}
+</div>

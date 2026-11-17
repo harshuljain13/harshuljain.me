@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Navbar from '../../components/Navbar.astro';
+import { talks, profile } from '../../data/content';
+import Logo from '../../components/Logo.astro';
+
+export function getStaticPaths() {
+  return talks.map(talk => ({ params: { slug: talk.slug }, props: { talk } }));
+}
+
+const { talk } = Astro.props;
+
+const kindLabel: Record<string, string> = {
+  talk: 'Talk',
+  workshop: 'Workshop',
+  'guest-lecture': 'Guest lecture',
+  invited: 'Invited talk',
+};
+
+const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
+---
+
+<BaseLayout
+  title={`${talk.title} — ${talk.venue} | Harshul Jain`}
+  description={talk.description || `${kindLabel[talk.kind]} at ${talk.venue}, ${talk.date}.`}
+>
+  <Navbar />
+
+  <article class="container-wide py-14 md:py-20">
+    <a href="/#speaking" class="inline-flex items-center gap-2 text-[13px] text-muted hover:text-accent transition-colors mb-10">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All talks
+    </a>
+
+    {/* header */}
+    <header class="max-w-3xl mb-12">
+      <div class="flex flex-wrap items-center gap-2.5 mb-5">
+        <span class={talk.kind === 'guest-lecture' ? 'chip chip-amber' : 'chip chip-accent'}>
+          {kindLabel[talk.kind]}
+        </span>
+        <span class="text-[12px] font-mono text-muted">
+          {talk.venue} · {talk.date}{talk.location ? ` · ${talk.location}` : ''}
+        </span>
+      </div>
+
+      <h1 class="text-3xl md:text-[2.6rem] leading-[1.1] font-semibold tracking-tightest mb-5">
+        {talk.title}
+      </h1>
+
+      <span class="rule in-view mb-6"></span>
+
+      <p class="text-[14px] text-muted">
+        Presented by <span class="text-fg">{profile.name}</span>
+        {talk.withSpeakers?.length ? <> · with {talk.withSpeakers.join(', ')}</> : null}
+      </p>
+    </header>
+
+    {/* video */}
+    {talk.youtubeId && (
+      <div class="mb-12 max-w-4xl">
+        <div class="relative aspect-video rounded-xl overflow-hidden border border-line bg-elevated">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}?rel=0`}
+            title={talk.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+            allowfullscreen
+            class="absolute inset-0 w-full h-full border-0"
+          ></iframe>
+        </div>
+      </div>
+    )}
+
+    {/* description */}
+    <div class="grid md:grid-cols-[1fr_auto] gap-12 md:gap-16 items-start">
+      <div class="max-w-2xl">
+        <h2 class="text-sm font-mono uppercase tracking-[0.18em] text-muted mb-5">About this session</h2>
+
+        {talk.description ? (
+          <p class="text-[15px] leading-[1.8] text-muted whitespace-pre-line">{talk.description}</p>
+        ) : (
+          <p class="text-[15px] leading-[1.8] text-muted italic">
+            Session description coming soon.
+          </p>
+        )}
+
+        {talk.body?.length ? (
+          <div class="text-[15px] leading-[1.8] text-muted space-y-4 mt-5">
+            {talk.body.map(p => <p>{p}</p>)}
+          </div>
+        ) : null}
+
+        {talk.hashtags?.length ? (
+          <div class="flex flex-wrap gap-2 mt-9 pt-8 border-t border-line">
+            {talk.hashtags.map(h => <span class="chip">#{h}</span>)}
+          </div>
+        ) : null}
+      </div>
+
+      {/* sidebar */}
+      <aside class="md:w-60 shrink-0 space-y-6">
+        <div class="card !p-5">
+          <Logo src={talk.logo} class="logo-md mb-5" />
+          <dl class="space-y-3 text-[13px]">
+            <div>
+              <dt class="text-muted text-[11px] font-mono uppercase tracking-wider mb-0.5">Event</dt>
+              <dd>{talk.venue}</dd>
+            </div>
+            <div>
+              <dt class="text-muted text-[11px] font-mono uppercase tracking-wider mb-0.5">Year</dt>
+              <dd>{talk.date}</dd>
+            </div>
+            {talk.location && (
+              <div>
+                <dt class="text-muted text-[11px] font-mono uppercase tracking-wider mb-0.5">Location</dt>
+                <dd>{talk.location}</dd>
+              </div>
+            )}
+          </dl>
+
+          <div class="flex flex-col gap-2 mt-5">
+            {talk.youtubeId && (
+              <a href={`https://youtu.be/${talk.youtubeId}`} target="_blank" rel="noopener" class="btn-ghost !px-4 !py-2 justify-center text-[13px]">
+                Watch on YouTube
+              </a>
+            )}
+            {talk.sessionUrl && (
+              <a href={talk.sessionUrl} target="_blank" rel="noopener" class="btn-ghost !px-4 !py-2 justify-center text-[13px]">
+                Session page
+              </a>
+            )}
+          </div>
+        </div>
+
+        <a href="/#connect" class="btn-primary w-full justify-center !py-2.5 text-[13px]">
+          Invite me to speak
+        </a>
+      </aside>
+    </div>
+
+    {/* related */}
+    {related.length > 0 && (
+      <section class="mt-20 pt-12 border-t border-line">
+        <h2 class="text-sm font-mono uppercase tracking-[0.18em] text-muted mb-7">More talks</h2>
+        <div class="grid md:grid-cols-3 gap-4">
+          {related.map(t => (
+            <a href={`/talks/${t.slug}`} class="card group block !p-5">
+              <Logo src={t.logo} class="logo-sm mb-4" />
+              <p class="text-[11px] font-mono text-accent mb-2">{t.venue}</p>
+              <p class="text-[14px] font-semibold leading-snug group-hover:text-accent transition-colors">{t.title}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+
+  <footer class="border-t border-line">
+    <div class="container-wide py-10 flex items-center justify-between gap-5">
+      <p class="font-semibold tracking-tightest">Harshul Jain</p>
+      <a href="/" class="text-[13px] text-muted hover:text-accent transition-colors">harshuljain.me</a>
+    </div>
+  </footer>
+</BaseLayout>
