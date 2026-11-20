@@ -20,10 +20,12 @@ npm run build
 
 ## Design
 
-- Type: Fraunces (display) + Inter (UI) + JetBrains Mono (code)
+- Type: Inter (UI) + JetBrains Mono (code)
 - Palette: paper `#FAFAF7`, ink `#111`, accent burnt-orange `#C2410C`
 - Dark mode via `class` strategy, persisted to localStorage
 
-## Deploy
+## Deploy (Netlify)
 
-Vercel or Netlify. Point `harshuljain.me` DNS at the deploy.
+1. Netlify → Add new site → Import from GitHub → pick this repo. `netlify.toml` sets the build command, publish dir, and Node version.
+2. Domain management → add `harshuljain.me` and follow the DNS instructions (Netlify DNS or an `A`/`CNAME` record at your registrar). HTTPS is automatic.
+3. Substack posts are fetched at build time. To keep them fresh, create a build hook (Site configuration → Build & deploy → Build hooks) and save its URL as the `NETLIFY_BUILD_HOOK` repository secret. `.github/workflows/rebuild.yml` then triggers a rebuild daily.

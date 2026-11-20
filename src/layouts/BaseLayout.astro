@@ -7,6 +7,26 @@ interface Props {
   description?: string;
 }
 const { title = `${profile.name} — ${profile.role}`, description = profile.tagline } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/img/headshot.jpg', Astro.site).href;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: Astro.site?.href,
+  image: ogImage,
+  jobTitle: 'Senior Software Engineer',
+  worksFor: { '@type': 'Organization', name: 'Audible' },
+  email: `mailto:${profile.email}`,
+  sameAs: [
+    profile.links.linkedin,
+    profile.links.github,
+    profile.links.scholar,
+    profile.links.substack,
+    profile.links.x,
+    profile.links.alphaxiv,
+  ],
+};
 ---
 
 <!doctype html>
@@ -23,11 +43,22 @@ const { title = `${profile.name} — ${profile.role}`, description = profile.tag
       rel="stylesheet"
     />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${profile.name} on Substack`} href={`${profile.links.substack}/feed`} />
+    <link rel="me" href={profile.links.linkedin} />
+    <link rel="me" href={profile.links.github} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@harshuljain13" />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
 
     <script is:inline>
       // Dark is the default; only an explicit 'light' choice opts out.

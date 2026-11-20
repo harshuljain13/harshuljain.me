@@ -20,7 +20,7 @@ export const profile = {
     github: 'https://github.com/harshuljain13',
     scholar: 'https://scholar.google.com/citations?user=m5AnZ-wAAAAJ',
     substack: 'https://harshuljain.substack.com',
-    linkedin: 'https://www.linkedin.com/in/harshuljain13',
+    linkedin: 'https://www.linkedin.com/in/hjain1393',
     x: 'https://x.com/harshuljain13',
     handbook: 'https://github.com/harshuljain13/llm-inference-at-scale',
     alphaxiv: 'https://www.alphaxiv.org/@harshul-jain',
@@ -180,6 +180,16 @@ export type Paper = {
  */
 export const papers: Paper[] = [
   {
+    title: 'Admission Control for LLM Inference Serving: A Systematic Review',
+    authors: 'H. Jain, T. Sah, T. Sah, P. Khatri, D. Sah',
+    venue: 'Preprints.org 2026111079',
+    year: '2026',
+    status: 'preprint',
+    summary:
+      'An adapted-PRISMA review of 55 admission and admission-adjacent works (2022–2026): why overload in LLM serving is governed at the ingress, not inside the engine.',
+    doi: 'https://doi.org/10.20944/preprints202611.1079.v1',
+  },
+  {
     title:
       'Do We Need an LLM to Know Why Sources Conflict? Decision Models for Knowledge-Conflict Typing in RAG',
     authors: 'P. Khatri, H. Jain, M. Kapoor, T. Sah',
@@ -196,7 +206,7 @@ export const papers: Paper[] = [
     venue: 'arXiv preprint arXiv:2610.05622',
     year: '2026',
     status: 'preprint',
-    cites: 2,
+    cites: 3,
     summary:
       'A benchmark that isolates whether an agent can complete a task exactly once under transport faults — recovery capability measured separately from raw task competence.',
     arxiv: 'https://arxiv.org/abs/2610.05622',
@@ -207,7 +217,7 @@ export const papers: Paper[] = [
     venue: 'arXiv preprint arXiv:2608.28363',
     year: '2026',
     status: 'preprint',
-    cites: 3,
+    cites: 4,
     summary:
       'A recoverability layer for agents that mutate external state: pre-state witnesses, duplicate-retry suppression, and selective rollback that spares newer valid work.',
     arxiv: 'https://arxiv.org/abs/2608.28363',
@@ -278,7 +288,7 @@ export const projects: Project[] = [
   },
   {
     name: 'Admission Control Policies Survey',
-    tagline: 'Survey of 16 production and research admission policies. Companion to the ACM Queue article.',
+    tagline: 'Survey of 16 production and research admission policies. Companion to the systematic review on Preprints.org.',
     link: 'https://github.com/harshuljain13/AdmissionControlPolicies-Survey',
     tag: 'Survey',
     accent: 'from-amber-400 to-orange-500',
@@ -316,7 +326,7 @@ export type Highlight = {
 
 export const highlights: Highlight[] = [
   { value: '6', label: 'Talks & guest lectures' },
-  { value: '5', label: 'Papers & pre-prints' },
+  { value: '6', label: 'Papers & pre-prints' },
   { value: '5+', label: 'Hackathons judged' },
   { value: '10+', label: 'Manuscripts & papers reviewed' },
   { value: '300+', label: 'Professionals mentored' },
