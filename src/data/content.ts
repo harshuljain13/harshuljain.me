@@ -145,7 +145,7 @@ This talk makes the case for admission control: deciding what to refuse before i
   },
   {
     slug: 'ai-context-runtime-agnostic-agents',
-    venue: 'AI Context Series',
+    venue: 'MCP Conference, AI Context Series',
     title: 'Beyond Frameworks: Building Runtime-Agnostic AI Agents',
     date: 'Mar 2026',
     kind: 'talk',
