@@ -18,11 +18,21 @@ const kindLabel: Record<string, string> = {
 };
 
 const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
+
+const embedSrc = (start = talk.start ?? 0, autoplay = false) =>
+  `https://www.youtube-nocookie.com/embed/${talk.youtubeId}?rel=0${start ? `&start=${start}` : ''}${autoplay ? '&autoplay=1' : ''}`;
+const watchUrl = `https://youtu.be/${talk.youtubeId}${talk.start ? `?t=${talk.start}` : ''}`;
+const timestamp = (sec: number) => {
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+  const mmss = `${String(m).padStart(h ? 2 : 1, '0')}:${String(s).padStart(2, '0')}`;
+  return h ? `${h}:${mmss}` : mmss;
+};
 ---
 
 <BaseLayout
   title={`${talk.title} — ${talk.venue} | Harshul Jain`}
-  description={talk.description || `${kindLabel[talk.kind]} at ${talk.venue}, ${talk.date}.`}
+  description={talk.summary || talk.description || `${kindLabel[talk.kind]} at ${talk.venue}, ${talk.date}.`}
+  image={talk.youtubeId ? `https://i.ytimg.com/vi/${talk.youtubeId}/maxresdefault.jpg` : undefined}
 >
   <Navbar />
 
@@ -60,7 +70,9 @@ const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
       <div class="mb-12 max-w-4xl">
         <div class="relative aspect-video rounded-xl overflow-hidden border border-line bg-elevated">
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}?rel=0`}
+            src={embedSrc()}
+            data-talk-video
+            data-embed-base={embedSrc(0)}
             title={talk.title}
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
@@ -83,6 +95,28 @@ const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
             Session description coming soon.
           </p>
         )}
+
+        {talk.chapters?.length ? (
+          <div class="mt-10">
+            <h2 class="text-sm font-mono uppercase tracking-[0.18em] text-muted mb-4">Chapters</h2>
+            <ol class="divide-y divide-line border-y border-line">
+              {talk.chapters.map(([sec, label]) => (
+                <li>
+                  <a
+                    href={`https://youtu.be/${talk.youtubeId}?t=${sec}`}
+                    target="_blank"
+                    rel="noopener"
+                    data-seek={sec}
+                    class="flex items-baseline gap-4 py-2.5 text-[14px] text-muted hover:text-accent transition-colors"
+                  >
+                    <span class="font-mono text-[12px] text-accent w-14 shrink-0">{timestamp(sec)}</span>
+                    <span>{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : null}
 
         {talk.body?.length ? (
           <div class="text-[15px] leading-[1.8] text-muted space-y-4 mt-5">
@@ -120,7 +154,7 @@ const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
 
           <div class="flex flex-col gap-2 mt-5">
             {talk.youtubeId && (
-              <a href={`https://youtu.be/${talk.youtubeId}`} target="_blank" rel="noopener" class="btn-ghost !px-4 !py-2 justify-center text-[13px]">
+              <a href={watchUrl} target="_blank" rel="noopener" class="btn-ghost !px-4 !py-2 justify-center text-[13px]">
                 Watch on YouTube
               </a>
             )}
@@ -131,6 +165,21 @@ const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
             )}
           </div>
         </div>
+
+        {talk.resources?.length ? (
+          <div class="card !p-5">
+            <h2 class="text-muted text-[11px] font-mono uppercase tracking-wider mb-3">Resources</h2>
+            <ul class="space-y-2.5">
+              {talk.resources.map(r => (
+                <li>
+                  <a href={r.href} target="_blank" rel="noopener" class="text-[13px] leading-snug hover:text-accent transition-colors">
+                    {r.label} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <a href="/#connect" class="btn-primary w-full justify-center !py-2.5 text-[13px]">
           Invite me to speak
@@ -162,3 +211,17 @@ const related = talks.filter(t => t.slug !== talk.slug).slice(0, 3);
     </div>
   </footer>
 </BaseLayout>
+
+<script is:inline>
+  // Chapter links seek the embedded player instead of leaving the page.
+  document.querySelectorAll('[data-seek]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const frame = document.querySelector('[data-talk-video]');
+      if (!frame) return;
+      e.preventDefault();
+      const base = frame.getAttribute('data-embed-base');
+      frame.src = `${base}&start=${a.getAttribute('data-seek')}&autoplay=1`;
+      frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+</script>

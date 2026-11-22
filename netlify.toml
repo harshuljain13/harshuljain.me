@@ -15,3 +15,13 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/talks/ai-context-stopping-mcp-tool-attacks/*"
+  to = "/talks/ai-context-runtime-agnostic-agents/"
+  status = 301
+
+[[redirects]]
+  from = "/talks/ai-context-stopping-mcp-tool-attacks"
+  to = "/talks/ai-context-runtime-agnostic-agents/"
+  status = 301
