@@ -5,10 +5,11 @@ import { profile } from '../data/content';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
-const { title = `${profile.name} — ${profile.role}`, description = profile.tagline } = Astro.props;
+const { title = `${profile.name} — ${profile.role}`, description = profile.tagline, image } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/img/headshot.jpg', Astro.site).href;
+const ogImage = new URL(image ?? '/img/headshot.jpg', Astro.site).href;
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -56,7 +57,7 @@ const person = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:site_name" content={profile.name} />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@harshuljain13" />
+    <meta name="twitter:site" content="@hj1393" />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
 

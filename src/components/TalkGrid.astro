@@ -68,6 +68,10 @@ const [featured, ...rest] = ordered;
         {featured.title}
       </h3>
 
+      {featured.summary && (
+        <p class="text-[14px] text-muted leading-relaxed mb-3 max-w-2xl line-clamp-3">{featured.summary}</p>
+      )}
+
       <p class="text-[13px] text-muted">
         {featured.venue}{featured.location ? ` · ${featured.location}` : ''}
         {featured.withSpeakers?.length ? ` · with ${featured.withSpeakers.join(', ')}` : ''}
@@ -114,6 +118,10 @@ const [featured, ...rest] = ordered;
         <h3 class="text-[15px] font-semibold leading-snug mb-2 group-hover:text-accent transition-colors">
           {t.title}
         </h3>
+
+        {t.summary && (
+          <p class="text-[13px] text-muted leading-relaxed mb-3 line-clamp-3">{t.summary}</p>
+        )}
 
         <p class="text-[13px] text-muted mt-auto">
           {t.venue}{t.location ? ` · ${t.location}` : ''}

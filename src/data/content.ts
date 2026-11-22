@@ -21,7 +21,7 @@ export const profile = {
     scholar: 'https://scholar.google.com/citations?user=m5AnZ-wAAAAJ',
     substack: 'https://harshuljain.substack.com',
     linkedin: 'https://www.linkedin.com/in/hjain1393',
-    x: 'https://x.com/harshuljain13',
+    x: 'https://x.com/hj1393',
     handbook: 'https://github.com/harshuljain13/llm-inference-at-scale',
     alphaxiv: 'https://www.alphaxiv.org/@harshul-jain',
     resume: 'https://drive.google.com/file/d/1xHDnUI1RPkGQj7T3UU61NkC-Wc6DXPK4/view',
@@ -53,6 +53,14 @@ export type Talk = {
   brandFg: 'light' | 'dark';
   /** YouTube video ID — '' until the recording is published */
   youtubeId?: string;
+  /** Second the embed starts at (skips intros). */
+  start?: number;
+  /** 2–3 line teaser shown on the landing-page card. */
+  summary?: string;
+  /** Video chapters: [seconds, label]. Rendered as seekable links on the talk page. */
+  chapters?: [number, string][];
+  /** Slides, code, papers and other links for the talk page. */
+  resources?: { label: string; href: string }[];
   /** Session abstract. Paste the Sessionize description here. */
   description?: string;
   /** Extra paragraphs below the abstract (takeaways, context). */
@@ -79,7 +87,35 @@ export const talks: Talk[] = [
     tile: 'from-sky-500 to-cyan-400',
     youtubeId: 'y2W4FNAuPEA',
     withSpeakers: ['Tanmay Sah'],
-    description: '', // ← paste the Sessionize abstract here
+    summary:
+      'Why KV cache, not compute, breaks LLM serving. GPU memory math from first principles, then model-side (quantization, GQA/MLA, FlashAttention) and serving-side (paged attention, continuous batching, prefix caching) fixes — each benchmarked.',
+    description: `A single token of KV cache on Mistral 7B costs 131 KB. Multiply that by 16,000 tokens of context and 80 concurrent users and the cache alone wants 42 GB of GPU memory — which is why requests start failing on a 24 GB card. This workshop builds that number up from first principles.
+
+It opens on three symptoms every team hits: memory that climbs with context length, time to first token that degrades as prompts grow, and throughput that collapses because a naive server answers requests one after another. The rest of the session explains what causes each one, working down through the inference pipeline into the attention layer, then into how a GPU splits its memory between fixed model weights and the cache that has to grow.
+
+Optimization is then split in two. Tanmay takes the model side: quantization, multi-head through multi-query, grouped-query and latent attention, then FlashAttention and tiling. Harshul takes the serving side: paged attention borrowed from OS paging, continuous batching, prefix caching and KV quantization, each benchmarked against a plain baseline.
+
+It closes on engine selection: no statistical difference between vLLM and SGLang on standard workloads, but a 3–4× gap once agentic branching enters the picture.`,
+    chapters: [
+      [0, 'Introductions and what the workshop covers'],
+      [163, 'What LLM inference is, and why it costs so much'],
+      [321, 'The repo, the slides, and the free GPU notebooks'],
+      [503, 'Three pain points: memory, first token, throughput'],
+      [738, 'Foundations: the pipeline and the attention layer'],
+      [893, 'KV cache math and how GPU memory divides'],
+      [1241, 'Prefill and decode, and why decode is memory bound'],
+      [1721, 'Throughput, concurrency, and the trade-off triangle'],
+      [2042, 'The capacity calculator and picking a GPU'],
+      [2230, 'Model optimization: quantization and attention variants'],
+      [2884, 'FlashAttention, the scorecard, and a demo'],
+      [3614, 'Serving optimizations: paging, batching, caching'],
+      [3972, 'Benchmarking vLLM, and speculative decoding'],
+      [4647, 'vLLM vs SGLang, choosing an engine, what to study next'],
+    ],
+    resources: [
+      { label: 'Slides & notebooks — LLM Inference at Scale', href: 'https://github.com/harshuljain13/llm-inference-at-scale' },
+    ],
+    sessionUrl: 'https://ai.engineer/talks/y2W4FNAuPEA-youtube-5e3b6590220846c1c316',
     hashtags: ['LLMInference', 'vLLM', 'KVCache', 'GPUServing', 'AIInfra'],
   },
   {
@@ -95,7 +131,16 @@ export const talks: Talk[] = [
     tile: 'from-amber-400 to-orange-500',
     youtubeId: 'ntVpbyDTYaQ',
     withSpeakers: ['Parv Khatri'],
-    description: '', // ← paste the Sessionize abstract here
+    summary:
+      'Coding agents fan out, retry and burst — and a self-hosted LLM will accept every request. The case for admission control: refusing work before it reaches the GPU, drawn from 55 systems papers and eight production incidents.',
+    description: `Coding agents fan out, retry and burst, and if they hit an LLM you host yourself, your inference layer will happily accept every request and bury the ones you needed first.
+
+This talk makes the case for admission control: deciding what to refuse before it reaches the GPU. Drawing on a review of 55 systems papers and eight real production incidents, it shares five questions to ask any admission policy before you deploy it, and a checklist you can use right away.`,
+    resources: [
+      { label: 'Paper — Admission Control for LLM Inference Serving: A Systematic Review', href: 'https://doi.org/10.20944/preprints202611.1079.v1' },
+      { label: 'AdmitPerf — admission control benchmark harness', href: 'https://github.com/harshuljain13/AdmitPerf' },
+      { label: 'Admission Control Policies Survey', href: 'https://github.com/harshuljain13/AdmissionControlPolicies-Survey' },
+    ],
     hashtags: ['AdmissionControl', 'LLMServing', 'Reliability', 'SelfHosted'],
   },
   {
@@ -114,16 +159,27 @@ export const talks: Talk[] = [
   {
     slug: 'cncf-mcp-security',
     venue: 'KubeCon + CloudNativeCon',
-    title: 'MCP Security',
+    title: 'Securing the Agentic Tool Layer: A Runtime Defense Framework for MCP Agent Deployments',
     date: '2026',
     kind: 'talk',
     logo: '/logos/cncf.svg',
     brandBg: '#FFFFFF',
     brandFg: 'dark',
     tile: 'from-indigo-500 to-blue-500',
-    youtubeId: '', // recording TBD
-    description: '',
-    hashtags: ['MCP', 'AgentSecurity', 'CloudNative'],
+    youtubeId: 'MqFxT2ezR3Y',
+    start: 206,
+    withSpeakers: ['Saurabh Yergattikar'],
+    summary:
+      'MCP agents get hijacked through the tools they already trust. A threat taxonomy from 80+ SAFE-MCP techniques, and a runtime proxy that cut tool-poisoning success from 74% to under 9% at under 120 ms per call.',
+    description: `Most LLM safety work guards the user prompt. MCP agents face a different problem: the attack arrives through the tools the agent already trusts. A poisoned tool description, a hidden instruction in a tool response, or a malicious server pulled from a public registry can hijack an agent without ever touching the user.
+
+This session walks through a threat taxonomy built from 80+ techniques catalogued under SAFE-MCP, a Linux Foundation / OpenSSF project, then shows a runtime proxy that validates tool calls and responses inline, with no changes to the agent or server. In red-team testing across five model backends, it cut tool-poisoning success from 74% to under 9% and indirect injection from 47% to under 6%, adding under 120 ms per call.
+
+Attendees leave with a concrete defense architecture, the false-positive tradeoffs that matter in production, and what to vet before approving an MCP server for their stack.`,
+    resources: [
+      { label: 'SAFE-MCP — threat technique catalogue', href: 'https://github.com/SAFE-MCP/safe-mcp' },
+    ],
+    hashtags: ['MCP', 'AgentSecurity', 'SAFEMCP', 'RedTeaming', 'CloudNative'],
   },
   {
     slug: 'odsc-west-sf-serving-llms-efficiently',
