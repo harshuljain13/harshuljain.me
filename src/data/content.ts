@@ -144,17 +144,33 @@ This talk makes the case for admission control: deciding what to refuse before i
     hashtags: ['AdmissionControl', 'LLMServing', 'Reliability', 'SelfHosted'],
   },
   {
-    slug: 'ai-context-stopping-mcp-tool-attacks',
+    slug: 'ai-context-runtime-agnostic-agents',
     venue: 'AI Context Series',
-    title: 'Stopping MCP Tool Attacks: Benchmarking Tool Security',
-    date: '2026',
+    title: 'Beyond Frameworks: Building Runtime-Agnostic AI Agents',
+    date: 'Mar 2026',
     kind: 'talk',
     logo: '/logos/ai-context.svg',
     brandBg: '#0D1117',
     brandFg: 'light',
     tile: 'from-violet-500 to-fuchsia-500',
-    description: '',
-    hashtags: ['MCP', 'AgentSecurity', 'OWASP', 'ToolCalling'],
+    summary:
+      'Separate what an agent does from how it executes. Patterns from AgentShip for swapping ADK and LangGraph, and plugging in MCP tools, memory and observability without rewriting agent code.',
+    description: `AI agent frameworks are proliferating: Google ADK, LangGraph, OpenAI Agents SDK, CrewAI, each with distinct paradigms, tool interfaces and deployment models. Tool standards like MCP, memory layers like mem0 and Supermemory, and observability platforms like LangFuse and Opik are emerging to solve interoperability, but adoption remains fragmented. Teams spend months building on one framework with tightly coupled memory, observability and tooling, only to find they need capabilities from another. The result: rewrites, lock-in and production delays.
+
+This talk introduces runtime-agnostic agent architecture. Instead of coupling agent logic to a framework, separate what the agent does from how it executes: write the agent once, run it on any engine, and integrate tools and memory through standardized abstractions.
+
+Drawing from AgentShip, an open-source production layer for AI agents:
+• Pluggable engine pattern: an AgentEngine abstraction that swaps ADK for LangGraph (or future runtimes) without touching agent code
+• MCP integration layer: standardized tool discovery and invocation, making tools portable across frameworks
+• Pluggable memory: short- and long-term memory with custom implementations, mem0, Supermemory or in-memory stores
+• Pluggable observability: framework-agnostic tracing with LangFuse, Opik or custom backends
+• Declarative agent configuration: YAML definitions that remove framework-specific boilerplate
+• Unified streaming and sessions: consistent behavior across engines, three streaming modes, pluggable session storage
+• Agent-to-agent orchestration: hierarchical workflows where sub-agents become tools
+
+The demo is a health AI assistant where a primary agent orchestrates five specialized sub-agents for conversation analysis, medical reports and action tracking, all on interchangeable backends.`,
+    resources: [{ label: 'AgentShip on GitHub', href: 'https://github.com/Agent-Ship/agent-ship' }],
+    hashtags: ['AIAgents', 'AgentShip', 'MCP', 'LangGraph', 'GoogleADK'],
   },
   {
     slug: 'cncf-mcp-security',
