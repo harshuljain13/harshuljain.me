@@ -15,7 +15,7 @@ const person = {
   '@type': 'Person',
   name: profile.name,
   url: Astro.site?.href,
-  image: ogImage,
+  image: new URL('/img/headshot.jpg', Astro.site).href,
   jobTitle: 'Senior Software Engineer',
   worksFor: { '@type': 'Organization', name: 'Audible' },
   email: `mailto:${profile.email}`,
