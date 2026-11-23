@@ -28,6 +28,7 @@ export const profile = {
     orcid: 'https://orcid.org/0009-0005-8083-5108',
     sessionize: 'https://sessionize.com/harshul-jain/',
     codementor: 'https://www.codementor.io/@harshul1610',
+    topmate: 'https://topmate.io/harshuljain13',
     resume: 'https://drive.google.com/file/d/1xHDnUI1RPkGQj7T3UU61NkC-Wc6DXPK4/view',
   },
 };
@@ -57,6 +58,7 @@ export const elsewhere: { group: string; links: ProfileLink[] }[] = [
     links: [
       { label: 'Sessionize', href: profile.links.sessionize, handle: 'harshul-jain' },
       { label: 'Codementor', href: profile.links.codementor, handle: '@harshul1610' },
+      { label: 'Topmate', href: profile.links.topmate, handle: 'harshuljain13' },
     ],
   },
   {
@@ -430,7 +432,7 @@ export const workAreas = [
 /** Where the 300+ mentoring sessions actually happened. */
 export const mentoring = [
   { name: 'Codementor', href: profile.links.codementor, logo: '/logos/codementor.svg' },
-  { name: 'Topmate',    href: 'https://topmate.io/harshuljain13',       logo: '/logos/topmate.png' },
+  { name: 'Topmate',    href: profile.links.topmate, logo: '/logos/topmate.png' },
 ];
 
 export type ReviewRole = {
