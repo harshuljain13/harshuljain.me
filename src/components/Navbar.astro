@@ -50,7 +50,7 @@ const links = [
     </div>
   </nav>
 
-  <div data-mobile-menu class="hidden md:hidden border-t border-line bg-bg">
+  <div data-mobile-menu class="hidden md:hidden border-t border-line bg-bg max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
     <div class="container-wide flex flex-col py-4 gap-3.5 text-sm text-muted">
       {links.map(l => (
         <a href={l.href} data-mobile-link class="hover:text-fg transition-colors">{l.label}</a>
