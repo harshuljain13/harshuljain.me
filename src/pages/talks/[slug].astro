@@ -134,7 +134,7 @@ const timestamp = (sec: number) => {
       {/* sidebar */}
       <aside class="md:w-60 shrink-0 space-y-6">
         <div class="card !p-5">
-          <Logo src={talk.logo} class="logo-md mb-5" />
+          <div class={`mb-5 inline-block ${talk.brandFg === 'dark' ? 'bg-white rounded-md px-2.5 py-1.5' : ''}`}><Logo src={talk.logo} class="logo-md" onLight={talk.brandFg === 'dark'} /></div>
           <dl class="space-y-3 text-[13px]">
             <div>
               <dt class="text-muted text-[11px] font-mono uppercase tracking-wider mb-0.5">Event</dt>
@@ -194,7 +194,7 @@ const timestamp = (sec: number) => {
         <div class="grid md:grid-cols-3 gap-4">
           {related.map(t => (
             <a href={`/talks/${t.slug}`} class="card group block !p-5">
-              <Logo src={t.logo} class="logo-sm mb-4" />
+              <div class={`mb-4 inline-block ${t.brandFg === 'dark' ? 'bg-white rounded-md px-2.5 py-1.5' : ''}`}><Logo src={t.logo} class="logo-sm" onLight={t.brandFg === 'dark'} /></div>
               <p class="text-[11px] font-mono text-accent mb-2">{t.venue}</p>
               <p class="text-[14px] font-semibold leading-snug group-hover:text-accent transition-colors">{t.title}</p>
             </a>
