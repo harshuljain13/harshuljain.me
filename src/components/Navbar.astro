@@ -91,6 +91,11 @@ const links = [
     const d = document.querySelector('[data-profiles]');
     if (!d) return;
     document.addEventListener('click', (e) => { if (!d.contains(e.target)) d.open = false; });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') d.open = false; });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !d.open) return;
+      const hadFocus = d.contains(document.activeElement);
+      d.open = false;
+      if (hadFocus) d.querySelector('summary')?.focus();
+    });
   })();
 </script>
