@@ -29,7 +29,6 @@ export const profile = {
     sessionize: 'https://sessionize.com/harshul-jain/',
     codementor: 'https://www.codementor.io/@harshul1610',
     topmate: 'https://topmate.io/harshuljain13',
-    resume: 'https://drive.google.com/file/d/1xHDnUI1RPkGQj7T3UU61NkC-Wc6DXPK4/view',
   },
 };
 
