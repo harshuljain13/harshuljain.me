@@ -25,9 +25,43 @@ export const profile = {
     handbook: 'https://github.com/harshuljain13/llm-inference-at-scale',
     alphaxiv: 'https://www.alphaxiv.org/@harshul-jain',
     openreview: 'https://openreview.net/profile?id=~Harshul_Jain1',
+    orcid: 'https://orcid.org/0009-0005-8083-5108',
+    sessionize: 'https://sessionize.com/harshul-jain/',
     resume: 'https://drive.google.com/file/d/1xHDnUI1RPkGQj7T3UU61NkC-Wc6DXPK4/view',
   },
 };
+
+export type ProfileLink = { label: string; href: string; handle: string };
+
+/** Public profiles, grouped for the "Elsewhere" block. */
+export const elsewhere: { group: string; links: ProfileLink[] }[] = [
+  {
+    group: 'Research',
+    links: [
+      { label: 'Google Scholar', href: profile.links.scholar, handle: 'm5AnZ-wAAAAJ' },
+      { label: 'ORCID', href: profile.links.orcid, handle: '0009-0005-8083-5108' },
+      { label: 'OpenReview', href: profile.links.openreview, handle: '~Harshul_Jain1' },
+      { label: 'alphaXiv', href: profile.links.alphaxiv, handle: '@harshul-jain' },
+    ],
+  },
+  {
+    group: 'Code & writing',
+    links: [
+      { label: 'GitHub', href: profile.links.github, handle: 'harshuljain13' },
+      { label: 'Substack', href: profile.links.substack, handle: 'harshuljain' },
+    ],
+  },
+  {
+    group: 'Speaking & social',
+    links: [
+      { label: 'Sessionize', href: profile.links.sessionize, handle: 'harshul-jain' },
+      { label: 'LinkedIn', href: profile.links.linkedin, handle: 'hjain1393' },
+      { label: 'X', href: profile.links.x, handle: '@hj1393' },
+    ],
+  },
+];
+
+export const profileLinks: ProfileLink[] = elsewhere.flatMap(g => g.links);
 
 /** Production-scale impact — the numbers that do the persuading. */
 export const impact = [

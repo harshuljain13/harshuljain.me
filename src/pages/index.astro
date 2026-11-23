@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar.astro';
 import TalkGrid from '../components/TalkGrid.astro';
 import Logo from '../components/Logo.astro';
 import ProjectArt from '../components/ProjectArt.astro';
-import { profile, talks, papers, projects, highlights, workAreas, impact, mentoring, reviewing } from '../data/content';
+import { profile, talks, papers, projects, highlights, workAreas, impact, mentoring, reviewing, elsewhere, profileLinks } from '../data/content';
 import { fetchPosts, formatDate } from '../lib/substack';
 
 const posts = await fetchPosts(4);
@@ -14,15 +14,8 @@ const statusLabel: Record<string, string> = {
   preprint: 'Pre-print',
 };
 
-const socials = [
-  { label: 'GitHub', href: profile.links.github },
-  { label: 'Scholar', href: profile.links.scholar },
-  { label: 'alphaXiv', href: profile.links.alphaxiv },
-  { label: 'OpenReview', href: profile.links.openreview },
-  { label: 'Substack', href: profile.links.substack },
-  { label: 'LinkedIn', href: profile.links.linkedin },
-  { label: 'X', href: profile.links.x },
-];
+const socials = profileLinks;
+const footerLinks = profileLinks.filter(l => ['GitHub', 'Google Scholar', 'Substack', 'LinkedIn', 'X'].includes(l.label));
 ---
 
 <BaseLayout>
@@ -357,6 +350,27 @@ const socials = [
           <a href={profile.links.linkedin} target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
         </div>
       </div>
+
+      <nav aria-labelledby="elsewhere-heading" class="relative mt-12 pt-10 border-t border-line">
+        <p id="elsewhere-heading" class="eyebrow mb-6">Elsewhere</p>
+        <div class="grid sm:grid-cols-3 gap-8">
+          {elsewhere.map(g => (
+            <div>
+              <p class="text-[11px] font-mono uppercase tracking-[0.18em] text-muted mb-3">{g.group}</p>
+              <ul class="space-y-2.5">
+                {g.links.map(l => (
+                  <li>
+                    <a href={l.href} target="_blank" rel="me noopener" class="group flex items-baseline justify-between gap-3">
+                      <span class="text-[14px] font-medium group-hover:text-accent transition-colors">{l.label}</span>
+                      <span class="text-[11px] font-mono text-muted truncate">{l.handle}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </nav>
     </div>
   </section>
 
@@ -368,7 +382,7 @@ const socials = [
         <p class="text-[12px] font-mono text-muted mt-1">{profile.role} · New York</p>
       </div>
       <div class="flex flex-wrap gap-5 text-[13px]">
-        {socials.map(s => (
+        {footerLinks.map(s => (
           <a href={s.href} target="_blank" rel="noopener" class="text-muted hover:text-accent transition-colors">{s.label}</a>
         ))}
       </div>
