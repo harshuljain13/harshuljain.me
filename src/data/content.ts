@@ -24,9 +24,52 @@ export const profile = {
     x: 'https://x.com/hj1393',
     handbook: 'https://github.com/harshuljain13/llm-inference-at-scale',
     alphaxiv: 'https://www.alphaxiv.org/@harshul-jain',
-    resume: 'https://drive.google.com/file/d/1xHDnUI1RPkGQj7T3UU61NkC-Wc6DXPK4/view',
+    openreview: 'https://openreview.net/profile?id=~Harshul_Jain1',
+    orcid: 'https://orcid.org/0009-0005-8083-5108',
+    sessionize: 'https://sessionize.com/harshul-jain/',
+    codementor: 'https://www.codementor.io/@harshul1610',
+    topmate: 'https://topmate.io/harshuljain13',
   },
 };
+
+export type ProfileLink = { label: string; href: string; handle: string };
+
+/** Public profiles, grouped for the "Elsewhere" block. */
+export const elsewhere: { group: string; links: ProfileLink[] }[] = [
+  {
+    group: 'Research',
+    links: [
+      { label: 'Google Scholar', href: profile.links.scholar, handle: 'm5AnZ-wAAAAJ' },
+      { label: 'ORCID', href: profile.links.orcid, handle: '0009-0005-8083-5108' },
+      { label: 'OpenReview', href: profile.links.openreview, handle: '~Harshul_Jain1' },
+      { label: 'alphaXiv', href: profile.links.alphaxiv, handle: '@harshul-jain' },
+    ],
+  },
+  {
+    group: 'Code & writing',
+    links: [
+      { label: 'GitHub', href: profile.links.github, handle: 'harshuljain13' },
+      { label: 'Substack', href: profile.links.substack, handle: 'harshuljain' },
+    ],
+  },
+  {
+    group: 'Speaking & mentoring',
+    links: [
+      { label: 'Sessionize', href: profile.links.sessionize, handle: 'harshul-jain' },
+      { label: 'Codementor', href: profile.links.codementor, handle: '@harshul1610' },
+      { label: 'Topmate', href: profile.links.topmate, handle: 'harshuljain13' },
+    ],
+  },
+  {
+    group: 'Social',
+    links: [
+      { label: 'LinkedIn', href: profile.links.linkedin, handle: 'hjain1393' },
+      { label: 'X', href: profile.links.x, handle: '@hj1393' },
+    ],
+  },
+];
+
+export const profileLinks: ProfileLink[] = elsewhere.flatMap(g => g.links);
 
 /** Production-scale impact — the numbers that do the persuading. */
 export const impact = [
@@ -387,8 +430,47 @@ export const workAreas = [
 
 /** Where the 300+ mentoring sessions actually happened. */
 export const mentoring = [
-  { name: 'Codementor', href: 'https://www.codementor.io/@harshul1610', logo: '/logos/codementor.svg' },
-  { name: 'Topmate',    href: 'https://topmate.io/harshuljain13',       logo: '/logos/topmate.png' },
+  { name: 'Codementor', href: profile.links.codementor, logo: '/logos/codementor.svg' },
+  { name: 'Topmate',    href: profile.links.topmate, logo: '/logos/topmate.png' },
+];
+
+export type ReviewRole = {
+  role: string;
+  venue: string;
+  /** Full name of the conference or workshop. */
+  name: string;
+  /** Edition dates and location. */
+  when: string;
+  note: string;
+  href: string;
+};
+
+/** Program-committee and reviewing service. */
+export const reviewing: ReviewRole[] = [
+  {
+    role: 'Ethics Reviewer',
+    venue: 'NeurIPS 2026',
+    name: '40th Conference on Neural Information Processing Systems',
+    when: 'Dec 6–13, 2026 · Sydney, with Atlanta & Paris satellites',
+    note: 'Second-round reviews of papers flagged for ethical risk, assessed against the NeurIPS Code of Ethics.',
+    href: 'https://neurips.cc/Conferences/2026',
+  },
+  {
+    role: 'Reviewer',
+    venue: 'ICML 2026 · SCALE Workshop',
+    name: 'Scalable Learning and Optimization for Efficient Multimodal AI Agents',
+    when: 'Jul 10, 2026 · COEX, Seoul',
+    note: 'Agentic memory, efficient agent systems on heterogeneous hardware, test-time scaling, and agent benchmarks.',
+    href: 'https://scale-icml-2026.github.io/',
+  },
+  {
+    role: 'Reviewer',
+    venue: 'ACM TRUST 2027',
+    name: 'ACM Conference on Trustworthy and Responsible AI and Computing Systems',
+    when: 'Mar 7–9, 2027 · Washington, DC (hybrid)',
+    note: 'Double-blind review of research on secure, resilient, and responsible AI systems.',
+    href: 'https://eigtrust.acm.org/trust2027/',
+  },
 ];
 
 export type Highlight = {

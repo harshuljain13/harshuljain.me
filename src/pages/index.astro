@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar.astro';
 import TalkGrid from '../components/TalkGrid.astro';
 import Logo from '../components/Logo.astro';
 import ProjectArt from '../components/ProjectArt.astro';
-import { profile, talks, papers, projects, highlights, workAreas, impact, mentoring } from '../data/content';
+import { profile, talks, papers, projects, highlights, workAreas, impact, mentoring, reviewing, elsewhere, profileLinks } from '../data/content';
 import { fetchPosts, formatDate } from '../lib/substack';
 
 const posts = await fetchPosts(4);
@@ -14,14 +14,8 @@ const statusLabel: Record<string, string> = {
   preprint: 'Pre-print',
 };
 
-const socials = [
-  { label: 'GitHub', href: profile.links.github },
-  { label: 'Scholar', href: profile.links.scholar },
-  { label: 'alphaXiv', href: profile.links.alphaxiv },
-  { label: 'Substack', href: profile.links.substack },
-  { label: 'LinkedIn', href: profile.links.linkedin },
-  { label: 'X', href: profile.links.x },
-];
+const socials = profileLinks;
+const footerLinks = profileLinks.filter(l => ['GitHub', 'Google Scholar', 'Substack', 'LinkedIn', 'X'].includes(l.label));
 ---
 
 <BaseLayout>
@@ -52,7 +46,6 @@ const socials = [
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href={profile.links.substack} target="_blank" rel="noopener" class="btn-ghost">Read the Substack</a>
-            <a href={profile.links.resume} target="_blank" rel="noopener" class="btn-ghost">Résumé</a>
           </div>
 
           <div class="flex flex-wrap items-center gap-x-8 gap-y-3 mb-9 fade-up">
@@ -176,11 +169,13 @@ const socials = [
   </section>
 
   {/* ---------------- SPEAKING ---------------- */}
-  <section id="speaking" class="section border-y border-line bg-surface/40">
+  <section id="speaking" class="border-y border-line bg-surface/60">
+    <div class="section">
     <p class="eyebrow fade-up"><span class="opacity-50">03</span> Speaking &amp; teaching</p>
     <h2 class="section-title fade-up">Talks, workshops, lectures</h2>
     <p class="section-sub fade-up">Conference sessions and university guest lectures. Cards marked ▶ have a recording — open one to watch.</p>
     <TalkGrid talks={talks} />
+  </div>
   </section>
 
   {/* ---------------- RESEARCH ---------------- */}
@@ -191,7 +186,7 @@ const socials = [
       Admission control for LLM serving, knowledge conflicts in RAG, agent recoverability, and model validation — mirrored from Google Scholar.
     </p>
 
-    <div class="space-y-4">
+    <div class="grid lg:grid-cols-2 gap-4">
       {papers.map(p => {
         const href = p.arxiv ?? p.doi;
         const Tag = href ? 'a' : 'div';
@@ -229,13 +224,36 @@ const socials = [
       })}
     </div>
 
-    <a href={profile.links.scholar} target="_blank" rel="noopener" class="btn-ghost mt-8 fade-up">
-      Full list on Google Scholar
-    </a>
+    {/* peer review */}
+    <div class="mt-14 fade-up">
+      <h3 class="text-[17px] font-semibold mb-1.5">Peer review &amp; program committees</h3>
+      <p class="text-[13px] text-muted mb-5">Reviewing for ML and trustworthy-AI venues.</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        {reviewing.map(r => (
+          <a href={r.href} target="_blank" rel="noopener" class="card group block !p-5">
+            <span class="chip chip-accent mb-3">{r.role}</span>
+            <p class="text-[15px] font-semibold leading-snug mb-1 group-hover:text-accent transition-colors">{r.venue}</p>
+            <p class="text-[12px] text-muted leading-snug mb-2">{r.name}</p>
+            <p class="text-[11px] font-mono text-muted mb-3">{r.when}</p>
+            <p class="text-[13px] text-muted leading-relaxed">{r.note}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-3 fade-up">
+      <a href={profile.links.scholar} target="_blank" rel="noopener" class="btn-ghost">
+        Full list on Google Scholar
+      </a>
+      <a href={profile.links.openreview} target="_blank" rel="noopener" class="btn-ghost">
+        OpenReview profile
+      </a>
+    </div>
   </section>
 
   {/* ---------------- PROJECTS ---------------- */}
-  <section id="projects" class="section border-y border-line bg-surface/40">
+  <section id="projects" class="border-y border-line bg-surface/60">
+    <div class="section">
     <p class="eyebrow fade-up"><span class="opacity-50">05</span> Projects</p>
     <h2 class="section-title fade-up">Open source</h2>
     <p class="section-sub fade-up">Handbooks, runtimes, and benchmarks.</p>
@@ -266,6 +284,7 @@ const socials = [
         </a>
       ))}
     </div>
+  </div>
   </section>
 
   {/* ---------------- WRITING ---------------- */}
@@ -320,19 +339,42 @@ const socials = [
 
   {/* ---------------- CONNECT ---------------- */}
   <section id="connect" class="section !pt-0">
-    <div class="relative overflow-hidden rounded-2xl border border-line bg-surface p-10 md:p-14 fade-up">
-      <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full pointer-events-none"
-           style="background:radial-gradient(circle,rgb(var(--accent)/0.14),transparent 70%);filter:blur(30px)"></div>
-      <div class="relative max-w-xl">
-        <p class="eyebrow mb-5">Contact</p>
-        <h2 class="text-2xl md:text-3xl font-semibold tracking-tightest mb-4">Let's talk</h2>
-        <p class="text-[15px] text-muted leading-relaxed mb-8">
-          Open to research collaborations, speaking invitations, mentoring, and conversations about LLM systems that ship.
-        </p>
-        <div class="flex flex-wrap gap-3">
-          <a href={`mailto:${profile.email}`} class="btn-primary">{profile.email}</a>
-          <a href={profile.links.linkedin} target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+    <div class="relative overflow-hidden rounded-2xl border border-line bg-surface p-8 md:p-12 fade-up">
+      <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full pointer-events-none"
+           style="background:radial-gradient(circle,rgb(var(--accent)/0.12),transparent 70%);filter:blur(30px)"></div>
+      <div class="relative grid lg:grid-cols-[1fr_1.35fr] gap-10 lg:gap-14">
+        <div>
+          <p class="eyebrow mb-5">Contact</p>
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tightest mb-4">Let's talk</h2>
+          <p class="text-[15px] text-muted leading-relaxed mb-8 max-w-md">
+            Open to research collaborations, speaking invitations, mentoring, and conversations about LLM systems that ship.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href={`mailto:${profile.email}`} class="btn-primary">{profile.email}</a>
+            <a href={profile.links.linkedin} target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+          </div>
         </div>
+
+        <nav aria-labelledby="elsewhere-heading" class="lg:border-l lg:border-line lg:pl-14">
+          <p id="elsewhere-heading" class="eyebrow mb-6">Elsewhere</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-7">
+            {elsewhere.map(g => (
+              <div>
+                <p class="text-[11px] font-mono uppercase tracking-[0.18em] text-muted mb-2.5">{g.group}</p>
+                <ul class="space-y-2">
+                  {g.links.map(l => (
+                    <li>
+                      <a href={l.href} target="_blank" rel="me noopener" class="group flex items-baseline justify-between gap-3">
+                        <span class="text-[14px] font-medium group-hover:text-accent transition-colors">{l.label}</span>
+                        <span class="text-[11px] font-mono text-muted truncate">{l.handle}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </nav>
       </div>
     </div>
   </section>
@@ -345,7 +387,7 @@ const socials = [
         <p class="text-[12px] font-mono text-muted mt-1">{profile.role} · New York</p>
       </div>
       <div class="flex flex-wrap gap-5 text-[13px]">
-        {socials.map(s => (
+        {footerLinks.map(s => (
           <a href={s.href} target="_blank" rel="noopener" class="text-muted hover:text-accent transition-colors">{s.label}</a>
         ))}
       </div>

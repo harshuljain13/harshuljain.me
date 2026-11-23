@@ -1,4 +1,6 @@
 ---
+import { elsewhere } from '../data/content';
+
 const links = [
   { href: '/#about', label: 'About' },
   { href: '/#speaking', label: 'Speaking' },
@@ -16,6 +18,24 @@ const links = [
       {links.map(l => (
         <a href={l.href} class="hover:text-fg transition-colors duration-200">{l.label}</a>
       ))}
+      <details data-profiles class="relative">
+        <summary class="list-none cursor-pointer select-none flex items-center gap-1 hover:text-fg transition-colors duration-200 [&::-webkit-details-marker]:hidden">
+          Profiles
+          <svg class="transition-transform duration-200" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="absolute right-1/2 translate-x-1/2 top-full mt-4 w-[520px] rounded-xl border border-line bg-surface p-6 shadow-[0_24px_48px_-20px_rgb(var(--shadow)/var(--shadow-a))] grid grid-cols-2 gap-x-8 gap-y-5">
+          {elsewhere.map(g => (
+            <div>
+              <p class="text-[10px] font-mono uppercase tracking-[0.18em] text-muted mb-2">{g.group}</p>
+              <ul class="space-y-1.5">
+                {g.links.map(l => (
+                  <li><a href={l.href} target="_blank" rel="noopener" class="text-fg hover:text-accent transition-colors">{l.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </details>
     </div>
 
     <div class="flex items-center gap-2">
@@ -30,11 +50,23 @@ const links = [
     </div>
   </nav>
 
-  <div data-mobile-menu class="hidden md:hidden border-t border-line bg-bg">
+  <div data-mobile-menu class="hidden md:hidden border-t border-line bg-bg max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
     <div class="container-wide flex flex-col py-4 gap-3.5 text-sm text-muted">
       {links.map(l => (
         <a href={l.href} data-mobile-link class="hover:text-fg transition-colors">{l.label}</a>
       ))}
+      <div class="border-t border-line pt-4 mt-1 grid grid-cols-2 gap-x-6 gap-y-4">
+        {elsewhere.map(g => (
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-[0.18em] mb-2">{g.group}</p>
+            <ul class="space-y-1.5">
+              {g.links.map(l => (
+                <li><a href={l.href} target="_blank" rel="noopener" class="text-fg hover:text-accent transition-colors">{l.label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
       <a href="/#connect" data-mobile-link class="btn-primary justify-center mt-1">Get in touch</a>
     </div>
   </div>
@@ -54,5 +86,16 @@ const links = [
       toggle.setAttribute('aria-expanded', String(!hidden));
     });
     document.querySelectorAll('[data-mobile-link]').forEach((a) => a.addEventListener('click', close));
+  })();
+  (function () {
+    const d = document.querySelector('[data-profiles]');
+    if (!d) return;
+    document.addEventListener('click', (e) => { if (!d.contains(e.target)) d.open = false; });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !d.open) return;
+      const hadFocus = d.contains(document.activeElement);
+      d.open = false;
+      if (hadFocus) d.querySelector('summary')?.focus();
+    });
   })();
 </script>
