@@ -217,11 +217,11 @@ The demo is a health AI assistant where a primary agent orchestrates five specia
   },
   {
     slug: 'cncf-mcp-security',
-    venue: 'KubeCon + CloudNativeCon',
+    venue: 'KubeCon + CloudNativeCon North America 2026',
     title: 'Securing the Agentic Tool Layer: A Runtime Defense Framework for MCP Agent Deployments',
     date: '2026',
     kind: 'talk',
-    logo: '/logos/cncf.svg',
+    logo: '/logos/kubecon-na-2026.svg',
     brandBg: '#FFFFFF',
     brandFg: 'dark',
     tile: 'from-indigo-500 to-blue-500',
